@@ -19,6 +19,7 @@ public class HomeActivity extends AppCompatActivity {
 
         ARouter.getInstance().inject(this);
 
+        // 判断是否存在缓存 这里要结合登录界面进行储存
         SharedPreferences sharedPreferences = getSharedPreferences("SignSystem", MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "");
         String password = sharedPreferences.getString("password", "");

@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        // 返回时引用动画
         overridePendingTransition(R.anim.fade_scale_in, R.anim.fade_right_out);
     }
 }

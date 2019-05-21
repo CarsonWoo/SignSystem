@@ -17,6 +17,7 @@ import butterknife.OnClick;
 @Route(path = Constants.ACTIVITY_VERIFY)
 public class VerifyActivity extends AppCompatActivity {
 
+    // BufferKnife 注解
     @BindView(R.id.iv_staff)
     ImageView iv_staff;
     @BindView(R.id.iv_manager)
@@ -31,16 +32,21 @@ public class VerifyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
 
+        // ARouter 绑定
         ARouter.getInstance().inject(this);
+        // BufferKnife绑定
         ButterKnife.bind(this);
 
     }
 
     @OnClick({R.id.iv_staff, R.id.tv_staff})
     public void onStaffLogin() {
+        // 路由定向
         ARouter.getInstance()
                 .build(Constants.ACTIVITY_LOGIN)
+                // 传参
                 .withString("identity", "staff")
+                // 进行动画
                 .withTransition(R.anim.fade_right_in, R.anim.fade_scale_out)
                 .navigation(VerifyActivity.this);
     }
