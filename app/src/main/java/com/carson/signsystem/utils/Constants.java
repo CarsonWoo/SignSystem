@@ -12,4 +12,10 @@ public class Constants {
     public static final String ACTIVITY_LOGIN = "/app/LoginActivity";
 
 
+    // 常量
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_PASSWORD = "password";
+    public static final String KEY_IDENTITY = "identity";
+    public static final String IDENTITY_STAFF = "staff";
+    public static final String IDENTITY_MANAGER = "manager";
 }
