@@ -10,6 +10,7 @@ public class Constants {
     public static final String ACTIVITY_HOME = "/app/HomeActivity";
     public static final String ACTIVITY_VERIFY = "/app/VerifyActivity";
     public static final String ACTIVITY_LOGIN = "/app/LoginActivity";
+    public static final String ACTIVITY_STAFF = "/app/StaffActivity";
 
 
     // 常量

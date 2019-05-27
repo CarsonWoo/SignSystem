@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -42,12 +41,11 @@ public class MyTitleBar extends RelativeLayout {
 
     public MyTitleBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        root = LayoutInflater.from(context).inflate(R.layout.my_title_bar, this, false);
+        root = View.inflate(context, R.layout.my_title_bar, this);
         ivLeft = root.findViewById(R.id.iv_title_bar_left);
         ivRight = root.findViewById(R.id.iv_title_bar_right);
         title = root.findViewById(R.id.title_bar_title);
 //        shouldShowRightIcon = false;
-
 
         TypedArray a = context.obtainStyledAttributes(R.styleable.MyTitleBar);
 

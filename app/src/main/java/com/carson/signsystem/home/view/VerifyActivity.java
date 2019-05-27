@@ -43,7 +43,7 @@ public class VerifyActivity extends AppCompatActivity {
     public void onStaffLogin() {
         // 路由定向
         ARouter.getInstance()
-                .build(Constants.ACTIVITY_LOGIN)
+                .build(Constants.ACTIVITY_STAFF)
                 // 传参
                 .withString("identity", "staff")
                 // 进行动画
