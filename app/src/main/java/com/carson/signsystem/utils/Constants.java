@@ -7,7 +7,7 @@ package com.carson.signsystem.utils;
 public class Constants {
 
     // 主工程HomeActivity 如下见名知意 不再赘述
-    public static final String ACTIVITY_HOME = "/app/HomeActivity";
+    public static final String ACTIVITY_SIGN = "/app/SignActivity";
     public static final String ACTIVITY_VERIFY = "/app/VerifyActivity";
     public static final String ACTIVITY_LOGIN = "/app/LoginActivity";
     public static final String ACTIVITY_STAFF = "/app/StaffActivity";
@@ -19,4 +19,9 @@ public class Constants {
     public static final String KEY_IDENTITY = "identity";
     public static final String IDENTITY_STAFF = "staff";
     public static final String IDENTITY_MANAGER = "manager";
+
+
+    // 定位常量
+    public static final double[] GUANGZHOU_LOCATION = {23.0632, 113.1553};
+    public static final double[] GDUFS_LOCATION = {23.063802447019274, 113.39803985960262};
 }

@@ -3,4 +3,5 @@
     <string name="verify_staff">我是员工</string>
     <string name="verify_manager">我是管理员</string>
     <string name="launch_text">广 外 签 到 系 统</string>
+    <string name="sign_text">签到</string>
 </resources>

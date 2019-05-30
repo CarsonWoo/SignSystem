@@ -8,6 +8,7 @@ import android.graphics.Shader;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.carson.signsystem.R;
@@ -28,6 +29,8 @@ public class MyCalendarView extends View {
     private static final String[] weeks = new String[]{"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 
     private static final List<Integer> selectedDates = new ArrayList<>();
+
+    public enum TYPE {BEFORE, AFTER};
 
     private Paint mBgPaint;
     private Paint mTextPaint;
@@ -67,8 +70,11 @@ public class MyCalendarView extends View {
     private int firstIndex;
     private int dayOfMonth;
     private int remains;
+    private int lastMonthDays;
 
     private int perWidth;
+
+    private OnChangeMonthListener mListener;
 
     public MyCalendarView(Context context) {
         this(context, null);
@@ -114,9 +120,14 @@ public class MyCalendarView extends View {
         mTitlePaddingTop = dp2px(10);
         mWeekPaddingTop = dp2px(15);
 
-        setMonth(new Date());
-//        setDate(new Date());
+//        setMonth(new Date());
+        // 放置在初始化可以避免经常重绘设置 提高性能
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
 
+    }
+
+    public void setMonthChangeListener(OnChangeMonthListener listener) {
+        this.mListener = listener;
     }
 
     public void setMonth(Date date) {
@@ -125,6 +136,15 @@ public class MyCalendarView extends View {
         Log.i(TAG, "mCurDate = " + mCurDate);
         String month = mCurDate.substring(4, 6);
         Log.i(TAG, "month = " + month);
+
+        String curDate = sf.format(new Date());
+        String curMonth = curDate.substring(4, 6);
+        if (curMonth.equals(month)) {
+            isCurMonth = true;
+        } else {
+            isCurMonth = false;
+        }
+
         if (month.startsWith("0")) {
             month = month.substring(1);
         }
@@ -142,35 +162,42 @@ public class MyCalendarView extends View {
 
         Calendar c = Calendar.getInstance();
         c.setTime(date);
-        // 当前月份第一天开始是星期几
-        firstIndex = c.get(Calendar.DAY_OF_WEEK_IN_MONTH) - 1;
-//        Log.i(TAG, "day of week in month = " + c.get(Calendar.DAY_OF_WEEK_IN_MONTH));
-//        Log.i(TAG, "firstIndex = " + firstIndex);
+        // 当前月份第一天开始是星期几 周一开始算的话要 - 2
+        firstIndex = c.get(Calendar.DAY_OF_WEEK) - 2;
+        if (firstIndex < 0) {
+            firstIndex += 7;
+        }
+
+        Log.i(TAG, "firstIndex = " + firstIndex);
 
         // 当前月份的天数
         dayOfMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
         int days = dayOfMonth;
         Log.i(TAG, "dayOfMonth = " + dayOfMonth);
 
-        days -= (firstIndex + 1);
-        rowCount = 1;
-        if (days % 7 != 0) rowCount++;
-        rowCount += (days / 7);
-
+        days -= (7 - firstIndex);
         // 最后一行剩余的天数
         remains = days;
-        for (int i = 1; i < rowCount - 1; i ++) {
-            // 一开始days已经减去firstIndex了
-            for (int j = 0; j < 7; j++) {
-                remains --;
-            }
+        rowCount = 1;
+        while (remains >= 7) {
+            remains -= 7;
+            rowCount++;
         }
+        if (remains > 0) rowCount++;
+
+        Log.i(TAG, "rowCount = " + rowCount);
         Log.i(TAG, "remains = " + remains);
 
         selectedDates.add(4);
         selectedDates.add(9);
         selectedDates.add(16);
-        selectedDates.add(20);
+        selectedDates.add(25);
+
+        // 上一个月
+        c.add(Calendar.MONTH, -1);
+        // 上一个月总共有多少天
+        lastMonthDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+
     }
 
     @Override
@@ -186,8 +213,8 @@ public class MyCalendarView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        // 设置关闭硬件加速 否则不显示阴影
-        setLayerType(LAYER_TYPE_SOFTWARE, null);
+        // 设置关闭硬件加速 否则不显示阴影 但是在此开启后会很慢 因为会不断重绘
+//        setLayerType(LAYER_TYPE_SOFTWARE, null);
 
 //        drawBackground(canvas);
 
@@ -205,22 +232,15 @@ public class MyCalendarView extends View {
         mTextPaint.setTextSize(mTitleSize);
         mTextPaint.setColor(Color.BLACK);
 //        mTitleHeight = mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top;
-        int x = (int) mTextPaint.measureText(currentMonth);
+        int x = (getWidth() - (int) mTextPaint.measureText(currentMonth)) / 2;
 //        Log.i(TAG, "month X = " + x);
-        canvas.drawText(currentMonth, x >> 1, mTitleHeight, mTextPaint);
+        canvas.drawText(currentMonth, x, mTitleHeight, mTextPaint);
     }
 
     private void drawWeek(Canvas canvas) {
         mTextPaint.setTextSize(mWeekSize);
-//        float currentX = mWeekTextPaint.measureText();
-        mTextPaint.setColor(Color.parseColor("#BBBBBB"));
-//        mTextPaint.setTextAlign(Paint.Align.CENTER);
-//        float measuredWidth = getMeasuredWidth();
-//        Log.i(TAG, "measureWidth = " + measuredWidth);
 
-//        float perWidth = measuredWidth / 7;
-//        Log.i(TAG, "perWidth = " + perWidth);
-//        mWeekHeight = mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top;
+        mTextPaint.setColor(Color.parseColor("#BBBBBB"));
 
         for (int i = 0; i < 7; i++) {
             int len = (int) mTextPaint.measureText(weeks[i]);
@@ -239,24 +259,47 @@ public class MyCalendarView extends View {
     private void drawDate(Canvas canvas) {
         mTextPaint.setColor(Color.BLACK);
         mTextPaint.setTextSize(mDateSize);
-//        mTextPaint.setTextAlign(Paint.Align.CENTER);
 
         mPaint.setColor(Color.BLUE);
         mPaint.setStrokeWidth(1);
 
-//        float perWidth = (float) getMeasuredWidth() / 7;
-
-//        int date = 1;
         float rowHeight = mDayHeight + dp2px(30);
         int passDays = 0;
         for (int row = 0; row < rowCount; row++) {
             if (row == 0) {
                 // 第一行
                 drawDay(canvas, 7, firstIndex, row, rowHeight, passDays);
-                passDays += firstIndex + 1;
+                passDays += (7 - firstIndex);
+                if (firstIndex > 0) {
+                    for (int i = 0; i < firstIndex; i++) {
+                        mTextPaint.setColor(Color.argb(50,
+                                95, 95, 95));
+                        String day = String.valueOf(lastMonthDays - firstIndex + i + 1);
+                        float len = mTextPaint.measureText(day);
+                        float curX = i * perWidth + (perWidth - len) / 2;
+                        float curY = mTitleHeight + mWeekPaddingTop + mWeekHeight + (row + 1) * rowHeight;
+                        canvas.drawText(day, curX, curY, mTextPaint);
+                    }
+                    mTextPaint.setColor(Color.BLACK);
+                }
             } else if (row == rowCount - 1) {
                 // 最后一行
-                drawDay(canvas, remains, 0, row, rowHeight, dayOfMonth - remains);
+                if (remains > 0) {
+                    drawDay(canvas, remains, 0, row, rowHeight, dayOfMonth - remains);
+                    for (int i = remains, j = 1; i < 7; i++, j++) {
+                        mTextPaint.setColor(Color.argb(50,
+                                95, 95, 95));
+                        String day = String.valueOf(j);
+                        float len = mTextPaint.measureText(day);
+                        float curX = i * perWidth + (perWidth - len) / 2;
+                        float curY = mTitleHeight + mWeekPaddingTop + mWeekHeight + (row + 1) * rowHeight;
+                        canvas.drawText(day, curX, curY, mTextPaint);
+                    }
+                    mTextPaint.setColor(Color.BLACK);
+                } else {
+                    // remains = 0的情况就是刚好一周
+                    drawDay(canvas, 7, 0, row, rowHeight, dayOfMonth - 7);
+                }
             } else {
                 drawDay(canvas, 7, 0, row, rowHeight, passDays);
                 passDays += 7;
@@ -268,17 +311,19 @@ public class MyCalendarView extends View {
     private void drawDay(Canvas canvas, int endIndex, int startIndex, int rowCount, float rowHeight, int passDay) {
         int date = passDay + 1;
         float originTop = mTitleHeight + mWeekPaddingTop + mWeekHeight;
-        for (int column = startIndex; column < endIndex; column ++) {
+        for (int column = startIndex; column < endIndex; column++) {
             float len = mTextPaint.measureText(String.valueOf(date));
             float currentX = column * perWidth + (perWidth - len) / 2;
 
-            if (date == this.currentDate) {
-                mBgPaint.setColor(getResources().getColor(R.color.colorAccent));
-                float cx = column * perWidth + (float) perWidth / 2;
-                float cy = originTop + rowHeight * (rowCount + 1) - 12;
-                mBgPaint.setStyle(Paint.Style.STROKE);
-                canvas.drawCircle(cx, cy, 40, mBgPaint);
-                mTextPaint.setColor(mSelectedColor);
+            if (isCurMonth) {
+                if (date == this.currentDate) {
+                    mBgPaint.setColor(getResources().getColor(R.color.colorAccent));
+                    float cx = column * perWidth + (float) perWidth / 2;
+                    float cy = originTop + rowHeight * (rowCount + 1) - 12;
+                    mBgPaint.setStyle(Paint.Style.STROKE);
+                    canvas.drawCircle(cx, cy, 40, mBgPaint);
+                    mTextPaint.setColor(mSelectedColor);
+                }
             }
 
             if (selectedDates.contains(date)) {
@@ -292,7 +337,7 @@ public class MyCalendarView extends View {
                 mPaint.setShadowLayer(0, 0, 0, Color.GRAY);
             } else {
                 // 不包含
-                if (date < currentDate) {
+                if (date < currentDate || !isCurMonth) {
                     mPaint.setColor(Color.argb(100, 228, 0, 0));
                     float cx = column * perWidth + (float) perWidth / 2;
                     float cy = originTop + rowHeight * (rowCount + 1) - 12;
@@ -308,12 +353,91 @@ public class MyCalendarView extends View {
             }
 
             canvas.drawText(String.valueOf(date), currentX, originTop + (rowCount + 1) * rowHeight, mTextPaint);
-            date ++;
+            date++;
             mBgPaint.setStyle(Paint.Style.FILL);
             mBgPaint.setColor(Color.parseColor("#DDDDDD"));
             mTextPaint.setColor(Color.BLACK);
             mPaint.setShader(null);
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x;
+        float y;
+        if (remains > 0 || firstIndex > 0) {
+            // 只有满足这两个条件才进行点击事件传递
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x = event.getX();
+                    y = event.getY();
+                    Log.e(TAG, "x = " + x);
+                    Log.e(TAG, "y = " + y);
+                    if (firstIndex > 0) {
+                        // 如果第一行有空隙
+                        float judgeYTop = mTitleHeight + mWeekPaddingTop + mWeekHeight + dp2px(30) + 20;
+                        float judgeYBottom = mTitleHeight + mWeekPaddingTop + mWeekHeight + mDayHeight + dp2px(30) + 40;
+                        float judgeXEnd = firstIndex * perWidth;
+                        float judgeXStart = 0;
+//                        Log.e(TAG, "judgeYTop = " + judgeYTop);
+//                        Log.e(TAG, "judgeYBottom = " + judgeYBottom);
+//                        Log.e(TAG, "judgeXStart = " + judgeXStart);
+//                        Log.e(TAG, "judgeXEnd = " + judgeXEnd);
+                        if (x < judgeXEnd && x > judgeXStart && y > judgeYTop && y < judgeYBottom) {
+                            if (mListener != null) {
+                                mListener.onChangeMonth(TYPE.BEFORE);
+                            }
+                        }
+                    }
+                    if (remains > 0) {
+                        // 最后一行有空隙
+                        float judgeYTop = mTitleHeight + mWeekPaddingTop + mWeekHeight + mDayHeight * (rowCount + 1)
+                                + dp2px(30) + 40 * (rowCount + 1) + 20;
+                        float judgeYBottom = mTitleHeight + mWeekPaddingTop + mWeekHeight + mDayHeight * (rowCount + 2)
+                                + dp2px(30) + (rowCount + 2) * 40 + 40;
+                        float judgeXEnd = getWidth();
+                        float judgeXStart = remains * perWidth;
+//                        Log.e(TAG, "judgeYTop = " + judgeYTop);
+//                        Log.e(TAG, "judgeYBottom = " + judgeYBottom);
+//                        Log.e(TAG, "judgeXStart = " + judgeXStart);
+//                        Log.e(TAG, "judgeXEnd = " + judgeXEnd);
+                        if (x < judgeXEnd && x > judgeXStart && y > judgeYTop && y < judgeYBottom) {
+                            if (mListener != null) {
+                                mListener.onChangeMonth(TYPE.AFTER);
+                            }
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+            }
+        }
+
+
+        return true;
+    }
+
+    /**
+     * 改变月份
+     * 以日期为参数 mDate
+     */
+    public void changeMonth(Date mDate) {
+        setMonth(mDate);
+        invalidate();
+    }
+
+    /**
+     * 改变月份
+     * 以数字为参数 +1 -1 change
+     */
+    public void changeMonth(int change) {
+        Log.e(TAG, "change = " + change);
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.MONTH, change);
+        setMonth(c.getTime());
+//        invalidate();
+        postInvalidate();
     }
 
     @Override
@@ -325,5 +449,9 @@ public class MyCalendarView extends View {
     private float dp2px(float dp) {
         float density = getResources().getDisplayMetrics().density;
         return (dp * density) + 0.5f;
+    }
+
+    public interface OnChangeMonthListener {
+        void onChangeMonth(TYPE type);
     }
 }
