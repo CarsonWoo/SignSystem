@@ -15,7 +15,6 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.carson.signsystem.R;
 import com.carson.signsystem.utils.Constants;
 import com.carson.signsystem.utils.HttpUtil;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,13 +76,14 @@ public class LoginActivity extends AppCompatActivity {
         String job_number = job_number_input.getText().toString();
         String password = password_input.getText().toString();
         String url = "";
-
         //不同端设置对应的地址端口
         if (identity.equals("manager")){
             url = Constants.ADDRESS + "/employer_login";
         }else if (identity.equals("staff")){
             url = Constants.ADDRESS + "/employee_login";
         }
+//        LoginModel model = new LoginModel(url, job_number, password);
+
 
 //        Toast.makeText(LoginActivity.this,"URL为："+ url,Toast.LENGTH_LONG).show();
 
@@ -98,6 +98,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseData = response.body().string();
 
+                Log.e(TAG, responseData);
+
                 //此处返回的Json数据仅为一个登录是否成功的验证码，故用JSonObject更简单
                 JSONObject jsonObject = null;
                 try {
@@ -110,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     code = jsonObject.getString("code");
 //                    code = Integer.parseInt(codeString);
-                } catch (JSONException e) {
+                } catch (JSONException | NullPointerException e) {
                     e.printStackTrace();
                 }
 
@@ -141,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call call, IOException e){
+                Log.e(TAG, e.getMessage());
                 Looper.prepare();
 //                Toast.makeText(LoginActivity.this,"网络通信发生错误",Toast.LENGTH_LONG).show();
                 Toast.makeText(LoginActivity.this,"错误信息："+ e.toString(),Toast.LENGTH_LONG).show();
