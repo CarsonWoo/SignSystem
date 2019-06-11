@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:CompanyOption="http://schemas.android.com/apk/res-auto"
+    >
+
+    <com.carson.signsystem.custom_views.MyTitleBar
+        android:id="@+id/company_titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/signing_release"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/company_titleBar"
+        app:layout_constraintLeft_toLeftOf="@id/company_titleBar">
+
+        <TextView
+            android:id="@+id/signing_release_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发布签到"
+            android:textColor="#000000"
+            android:textSize="30dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            />
+
+        <ImageView
+            android:id="@+id/signing_release_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/ic_arrow_forward_black"
+            app:layout_constraintTop_toTopOf="@+id/signing_release_name"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <View
+            android:id="@+id/signing_release_underline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#C0C0C0"
+            app:layout_constraintTop_toBottomOf="@id/signing_release_name"
+            app:layout_constraintLeft_toLeftOf="@id/signing_release_name"
+            android:layout_marginTop="30dp"
+            />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/signing_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/signing_release"
+        app:layout_constraintLeft_toLeftOf="@id/company_titleBar">
+
+        <TextView
+            android:id="@+id/signing_check_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="签到查看"
+            android:textColor="#000000"
+            android:textSize="30dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            />
+
+        <ImageView
+            android:id="@+id/signing_check_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/ic_arrow_forward_black"
+            app:layout_constraintTop_toTopOf="@+id/signing_check_name"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <View
+            android:id="@+id/signing_check_underline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#C0C0C0"
+            app:layout_constraintTop_toBottomOf="@id/signing_check_name"
+            app:layout_constraintLeft_toLeftOf="@id/signing_check_name"
+            android:layout_marginTop="30dp"
+            />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/staff_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/signing_check"
+        app:layout_constraintLeft_toLeftOf="@id/company_titleBar">
+
+        <TextView
+            android:id="@+id/staff_check_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="员工查看"
+            android:textColor="#000000"
+            android:textSize="30dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            />
+
+        <ImageView
+            android:id="@+id/staff_check_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/ic_arrow_forward_black"
+            app:layout_constraintTop_toTopOf="@+id/staff_check_name"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <View
+            android:id="@+id/staff_check_underline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#C0C0C0"
+            app:layout_constraintTop_toBottomOf="@id/staff_check_name"
+            app:layout_constraintLeft_toLeftOf="@id/staff_check_name"
+            android:layout_marginTop="30dp"
+            />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/information_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/staff_check"
+        app:layout_constraintLeft_toLeftOf="@id/company_titleBar">
+
+        <TextView
+            android:id="@+id/information_entry_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="信息录入"
+            android:textColor="#000000"
+            android:textSize="30dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            />
+
+        <ImageView
+            android:id="@+id/information_entry_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/ic_arrow_forward_black"
+            app:layout_constraintTop_toTopOf="@+id/information_entry_name"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <View
+            android:id="@+id/information_entry_underline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#C0C0C0"
+            app:layout_constraintTop_toBottomOf="@id/information_entry_name"
+            app:layout_constraintLeft_toLeftOf="@id/information_entry_name"
+            android:layout_marginTop="30dp"
+            />
+    </android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/information_entry_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="退出登录"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:background="#FF3030"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/information_entry"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        />
+
+</android.support.constraint.ConstraintLayout>

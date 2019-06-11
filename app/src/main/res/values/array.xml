@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="apartments">
+        <item>人事部</item>
+        <item>事业部</item>
+        <item>市场部</item>
+    </string-array>
+    <string-array name="address_range">
+        <item>1km</item>
+        <item>2km</item>
+        <item>3km</item>
+        <item>4km</item>
+    </string-array>
+</resources>

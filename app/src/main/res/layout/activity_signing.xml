@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.carson.signsystem.custom_views.MyTitleBar
+        android:id="@+id/signing_release_titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        >
+
+    </com.carson.signsystem.custom_views.MyTitleBar>
+
+    <TextView
+        android:id="@+id/signing_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="签到设置"
+        android:textSize="30dp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/signing_release_titleBar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/signing_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="签到地点"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/signing_settings"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:id="@+id/signing_place_name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="此处为您所定位的地址"
+        android:textSize="20dp"
+        android:maxLines="2"
+        app:layout_constraintLeft_toRightOf="@id/signing_place"
+        app:layout_constraintBottom_toBottomOf="@id/signing_place"
+        android:layout_marginLeft="5dp"
+
+        />
+
+
+
+    <ImageView
+        android:id="@+id/signing_place_locate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_place"
+        app:layout_constraintLeft_toRightOf="@id/signing_place_name"
+        app:layout_constraintTop_toTopOf="@id/signing_place"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/signing_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="签到时间"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        app:layout_constraintLeft_toLeftOf="@id/signing_place"
+        app:layout_constraintTop_toBottomOf="@id/signing_place"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/signing_time_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00-00"
+        android:textSize="25dp"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="@id/signing_time"
+        app:layout_constraintLeft_toRightOf="@id/signing_time"
+        android:layout_marginLeft="20dp"
+        />
+    <TextView
+        android:id="@+id/signing_time_mid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="至"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        app:layout_constraintLeft_toRightOf="@id/signing_time_start"
+        app:layout_constraintTop_toTopOf="@id/signing_time_start"
+        android:layout_marginLeft="30dp"/>
+    <TextView
+        android:id="@+id/signing_time_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00-00"
+        android:textSize="25dp"
+        app:layout_constraintLeft_toRightOf="@id/signing_time_mid"
+        app:layout_constraintTop_toTopOf="@id/signing_time_mid"
+        android:layout_marginLeft="20dp"
+        />
+
+    <TextView
+        android:id="@+id/signing_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="签到日期"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        app:layout_constraintLeft_toLeftOf="@id/signing_time"
+        app:layout_constraintTop_toBottomOf="@id/signing_time"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/signing_date_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1970 - 01 - 01"
+        android:textSize="25dp"
+        app:layout_constraintLeft_toRightOf="@id/signing_date"
+        app:layout_constraintTop_toTopOf="@id/signing_date"
+        android:layout_marginLeft="20dp"/>
+
+    <TextView
+        android:id="@+id/signing_date_mid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="至"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/signing_date_start"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/signing_date_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2019 - 12 - 31"
+        android:textSize="25dp"
+        app:layout_constraintLeft_toLeftOf="@id/signing_date_start"
+        app:layout_constraintTop_toBottomOf="@id/signing_date_mid"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/working_date_limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="仅限工作日"
+        android:textSize="20dp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/signing_date_end"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="10dp"
+        />
+
+    <CheckBox
+        android:id="@+id/working_date_limit_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/working_date_limit"
+        app:layout_constraintRight_toLeftOf="@id/working_date_limit"
+        android:layout_marginTop="1dp"/>
+
+    <TextView
+        android:id="@+id/department_choose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="部门选择"
+        android:textColor="#000000"
+        android:textSize="25dp"
+        app:layout_constraintLeft_toLeftOf="@id/signing_date"
+        app:layout_constraintTop_toBottomOf="@id/working_date_limit"
+        />
+
+    <CheckBox
+        android:id="@+id/department_choose_all_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="@id/market_department_check"
+        app:layout_constraintBottom_toTopOf="@id/market_department_check"/>
+
+    <TextView
+        android:id="@+id/department_choose_all_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="全选"
+        android:textColor="#000000"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="@id/department_choose_all_check"
+        app:layout_constraintRight_toLeftOf="@id/department_choose_all_check"
+        android:layout_marginRight="5dp"/>
+
+    <TextView
+    android:id="@+id/market_department"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="市场部"
+    android:textSize="22dp"
+    android:textColor="#000000"
+    app:layout_constraintTop_toBottomOf="@id/department_choose"
+    app:layout_constraintLeft_toLeftOf="@id/department_choose"
+    android:layout_marginTop="30dp"
+    android:layout_marginLeft="70dp"/>
+
+    <CheckBox
+        android:id="@+id/market_department_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/market_department"
+        app:layout_constraintLeft_toRightOf="@id/market_department"
+        android:layout_marginLeft="100dp"/>
+
+    <TextView
+        android:id="@+id/staffing_department"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="人事部"
+        android:textSize="22dp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/market_department"
+        app:layout_constraintLeft_toLeftOf="@id/market_department"
+        android:layout_marginTop="20dp"
+        />
+
+    <CheckBox
+        android:id="@+id/staffing_department_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/staffing_department"
+        app:layout_constraintLeft_toLeftOf="@id/market_department_check"
+        />
+
+    <TextView
+        android:id="@+id/developing_department"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="研发部"
+        android:textSize="22dp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/staffing_department"
+        app:layout_constraintLeft_toLeftOf="@id/market_department"
+        android:layout_marginTop="20dp"
+        />
+
+    <CheckBox
+        android:id="@+id/developing_department_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/developing_department"
+        app:layout_constraintLeft_toLeftOf="@id/market_department_check"
+        />
+
+    <Button
+        android:id="@+id/signing_release_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发布"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:background="@drawable/bt_signing_release"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+
+
+
+
+</android.support.constraint.ConstraintLayout>
