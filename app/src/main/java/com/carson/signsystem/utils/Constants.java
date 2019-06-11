@@ -20,6 +20,9 @@ public class Constants {
     public static final String IDENTITY_STAFF = "staff";
     public static final String IDENTITY_MANAGER = "manager";
 
+    //服务器地址
+    public static final String ADDRESS = "http://129.204.22.24:1234";
+
 
     // 定位常量
     public static final double[] GUANGZHOU_LOCATION = {23.0632, 113.1553};

@@ -43,9 +43,10 @@ public class VerifyActivity extends AppCompatActivity {
     public void onStaffLogin() {
         // 路由定向
         ARouter.getInstance()
-                .build(Constants.ACTIVITY_STAFF)
+                .build(Constants.ACTIVITY_LOGIN)
                 // 传参
                 .withString("identity", "staff")
+                .withString("code","0")
                 // 进行动画
                 .withTransition(R.anim.fade_right_in, R.anim.fade_scale_out)
                 .navigation(VerifyActivity.this);
@@ -56,6 +57,7 @@ public class VerifyActivity extends AppCompatActivity {
         ARouter.getInstance()
                 .build(Constants.ACTIVITY_LOGIN)
                 .withString("identity", "manager")
+                .withString("code","1")
                 .withTransition(R.anim.fade_right_in, R.anim.fade_scale_out)
                 .navigation(VerifyActivity.this);
     }
