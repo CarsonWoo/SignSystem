@@ -49,7 +49,6 @@ public class CompanyActivity extends AppCompatActivity {
                 .navigation(CompanyActivity.this);
     }
 
-    //没做出来，算了
     @OnClick(R.id.signing_check)
     public void setSigning_check(){
         ARouter.getInstance()
@@ -57,6 +56,24 @@ public class CompanyActivity extends AppCompatActivity {
                 .withTransition(R.anim.fade_right_in,R.anim.fade_scale_out)
                 .navigation(CompanyActivity.this);
     }
+
+    @OnClick(R.id.staff_check)
+    public void check_staff(){
+        ARouter.getInstance()
+                .build("/app/StaffCheckActivity")
+                .withTransition(R.anim.fade_right_in,R.anim.fade_scale_out)
+                .navigation(CompanyActivity.this);
+    }
+
+    @OnClick(R.id.information_entry)
+    public void setInformation_entry(){
+        ARouter.getInstance()
+                .build("/app/InformationEntryActivity")
+                .withTransition(R.anim.fade_right_in,R.anim.fade_scale_out)
+                .navigation(CompanyActivity.this);
+    }
+
+
 
     @OnClick(R.id.information_entry_exit)
     public void exit(){
@@ -66,4 +83,5 @@ public class CompanyActivity extends AppCompatActivity {
                 .withTransition(R.anim.fade_right_out,R.anim.fade_scale_in)
                 .navigation(CompanyActivity.this);
     }
+
 }

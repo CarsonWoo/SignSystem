@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         ARouter.getInstance().inject(this);
 
         ButterKnife.bind(this);
+        Log.e(TAG, identity);
     }
 
     @Override
@@ -128,14 +129,14 @@ public class LoginActivity extends AppCompatActivity {
                     if (identity.equals("manager")){
                         ARouter.getInstance()
                                 .build("/app/CompanyActivity")
+                                .withString("job_number",job_number)
                                 .withTransition(R.anim.fade_right_in,R.anim.fade_scale_out)
                                 .navigation(LoginActivity.this);
                     }
                     if (identity.equals("staff")){
-                        long job_number_long = Long.parseLong(job_number);
                         ARouter.getInstance()
                                 .build(Constants.ACTIVITY_STAFF)
-                                .withLong("job_number", job_number_long)
+                                .withString("job_number",job_number)
                                 .withTransition(R.anim.fade_right_in,R.anim.fade_scale_out)
                                 .navigation(LoginActivity.this);
                     }

@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.amap.api.location.AMapLocation;
@@ -41,14 +43,28 @@ import com.amap.api.maps2d.model.LatLngBounds;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.carson.signsystem.R;
+import com.carson.signsystem.home.model.SigningViewData;
 import com.carson.signsystem.utils.Constants;
+import com.carson.signsystem.utils.HttpUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.Response;
 
 @Route(path = Constants.ACTIVITY_SIGN)
 public class SignActivity extends AppCompatActivity implements AMap.OnCameraChangeListener,
@@ -75,6 +91,9 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
     @BindView(R.id.iv_back)
     ImageView iv_back;
 
+    @Autowired(name = "job_number")
+    String jobNumber;
+
     // 地图控制对象
     private AMap aMap;
     // 范围圆圈对象
@@ -91,7 +110,15 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
     // 判断是否已经签到了
     private boolean isAlreadyCheckin;
 
+
+    //签到所需要的距离作为签到范围
+    private String signingRange;
+
+    private ArrayList<SigningViewData> mDataList = new ArrayList<>();
+
     private ObjectAnimator collapseAnimator, expandAnimator;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +134,8 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
 
         ARouter.getInstance().inject(this);
         ButterKnife.bind(this);
+
+        loadRange();
 
         checkRequirePermission();
 
@@ -125,6 +154,31 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
 
         startLocation();
 
+    }
+
+    private void loadRange() {
+        String url = Constants.ADDRESS + "/check_sign_in";
+        HttpUtil.sendOkHttpRequest(url,new okhttp3.Callback(){
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseData = response.body().string();
+                JsonParser parser = new JsonParser();
+                JsonArray jsonArray = parser.parse(responseData).getAsJsonArray();
+                Gson gson = new Gson();
+                for (JsonElement signings:jsonArray){
+                    SigningViewData items = gson.fromJson(signings, SigningViewData.class);
+                    mDataList.add(items);
+                }
+                Log.e("所得范围", mDataList.get(0).getRange());
+            }
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("通讯失败","失败原因："+ e.toString());
+                Looper.prepare();
+                Toast.makeText(SignActivity.this,"通讯失败，原因为："+e.toString(),Toast.LENGTH_LONG).show();
+                Looper.loop();
+            }
+        });
     }
 
     private void startExpandAnimation() {
@@ -262,9 +316,11 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
             checkinPoint = mLocation;
             // 判断距离是否大于500米
             float distance = AMapUtils.calculateLineDistance(mLocation, mSchoolLocation);
+            SigningViewData newestSigning = mDataList.get(0);
+            signingRange = newestSigning.getRange();
 //            float distance = AMapUtils.calculateLineDistance(testLocation, mSchoolLocation);
             isLocateAction = true;
-            if (distance > 500) {
+            if (distance > Integer.parseInt(signingRange)*1000) {
                 // 超出
                 try {
                     LatLngBounds latLngBounds = createBounds(mLocation, mSchoolLocation);
@@ -281,7 +337,7 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
             } else {
                 mCircle = aMap.addCircle(new CircleOptions().center(mSchoolLocation)
                         .strokeColor(getResources().getColor(R.color.colorAccent))
-                        .radius(500).strokeWidth(5));
+                        .radius(Integer.parseInt(signingRange)*1000).strokeWidth(5));
             }
 
             if (mLocationMarker == null) {
@@ -373,8 +429,11 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
 //        float distance = AMapUtils.calculateLineDistance(mLatLng, mSchoolLocation);
         // 设置Marker在屏幕上 不跟随地图移动
 //        schoolMarker.setPositionByPixels(screenPoint.x, screenPoint.y);
+        SigningViewData newestSigning = mDataList.get(0);
+        signingRange = newestSigning.getRange();
+        Log.e("addMarker中的range",signingRange);
         aMap.addCircle(new CircleOptions().center(mSchoolLocation).strokeColor(getResources().getColor(R.color.colorAccent))
-                .radius(500).strokeWidth(5));
+                .radius(Integer.parseInt(signingRange)*1000).strokeWidth(5));
 
         // test
 //        aMap.addMarker(new MarkerOptions()
@@ -389,8 +448,10 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
     public void checkIn() {
         if (!isAlreadyCheckin) {
             float distance = AMapUtils.calculateLineDistance(mSchoolLocation, mLocation);
+            SigningViewData newestSigning = mDataList.get(0);
+            signingRange = newestSigning.getRange();
 //            float distance = AMapUtils.calculateLineDistance(mSchoolLocation, testLocation);
-            if (distance > 500) {
+            if (distance > Integer.parseInt(signingRange)*1000) {
                 Toast.makeText(this, "已超出签到范围", Toast.LENGTH_LONG).show();
             } else {
                 if (checkinPoint != null) {
@@ -399,10 +460,11 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
                     isAlreadyCheckin = true;
                     mLocationMarker.setTitle("签到");
                     mLocationMarker.setSnippet(date);
+                    postSigning();
                     startEllipseAnimation();
 //                    checkinMarker = aMap.addMarker(new MarkerOptions().position(checkinPoint).title("签到").snippet(date));
                     // 签到成功提示
-                    Toast.makeText(this, "签到成功", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(this, "签到成功", Toast.LENGTH_LONG).show();
                 } else {
                     startLocation();
                     // 定位中提示
@@ -412,6 +474,54 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
         } else {
             // 已签到提示
         }
+    }
+
+    private void postSigning() {
+        String url = Constants.ADDRESS + "/sign_in";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(new Date());
+        FormBody formBody = new FormBody.Builder()
+                .add("job_number",jobNumber)
+                .add("date",date)
+                .build();
+        HttpUtil.postOkHttpRequest(url,formBody, new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Looper.prepare();
+                Toast.makeText(SignActivity.this,"通信失败，错误信息："+ e,Toast.LENGTH_LONG).show();
+                Looper.loop();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //返回码1为成功，0为失败
+                String responseData = response.body().string();
+                //json对象解析返回码
+                JSONObject jsonObject = null;
+                int code = 0;
+                try{
+                    jsonObject = new JSONObject(responseData);
+                    code = jsonObject.getInt("code");
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                //响应返回码为1即成功的事件
+                if (code == 1){
+                    Looper.prepare();
+                    Toast.makeText(SignActivity.this,"发布成功",Toast.LENGTH_LONG).show();
+                    Looper.loop();
+                }
+                else{
+                    Looper.prepare();
+                    Toast.makeText(SignActivity.this,"发布失败,返回数据为：" + responseData,Toast.LENGTH_LONG).show();
+                    Log.e("返回数据为",responseData);
+                    Log.e("返回json为：", String.valueOf(jsonObject));
+                    Looper.loop();
+                }
+            }
+        });
+
     }
 
     /**

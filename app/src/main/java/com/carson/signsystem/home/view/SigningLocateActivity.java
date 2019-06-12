@@ -191,6 +191,7 @@ public class SigningLocateActivity extends AppCompatActivity implements Location
         myLocationStyle.showMyLocation(true);//显示蓝点
 
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);//连续定位、且将视角移动到地图中心点，定位蓝点跟随设备移动。（1秒1次定位）
+
         myLocationStyle.radiusFillColor(100);
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
 
@@ -198,7 +199,14 @@ public class SigningLocateActivity extends AppCompatActivity implements Location
 //        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
 //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
+
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+
+        aMap.addCircle(new CircleOptions()
+                .center(new LatLng(myLatitude,myLongtitude))
+                .fillColor(Color.argb(64,0,0,255))
+                .strokeColor(Color.argb(255,1,1,1))
+                .radius(1000));
 
     }
 

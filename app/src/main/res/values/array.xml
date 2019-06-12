@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="apartments">
+    <string-array name="departments">
         <item>人事部</item>
         <item>事业部</item>
         <item>市场部</item>

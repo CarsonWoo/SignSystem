@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/Android/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_place_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/Android/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_search_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,8 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="opacityPercent" value="43" />
-                            <entry key="outputName" value="ic_place" />
+                            <entry key="outputName" value="ic_search_black" />
                             <entry key="sourceFile" value="C:\Users\hasee" />
                           </map>
                         </option>
