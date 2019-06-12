@@ -105,7 +105,6 @@ public class SignActivity extends AppCompatActivity implements AMap.OnCameraChan
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
 
-
         ARouter.getInstance().inject(this);
         ButterKnife.bind(this);
 

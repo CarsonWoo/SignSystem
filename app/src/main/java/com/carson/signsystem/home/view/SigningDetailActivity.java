@@ -1,5 +1,6 @@
 package com.carson.signsystem.home.view;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -32,6 +33,11 @@ public class SigningDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+
         setContentView(R.layout.activity_signing_detail);
 
         ARouter.getInstance().inject(this);

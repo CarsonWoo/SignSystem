@@ -1,9 +1,11 @@
 package com.carson.signsystem.login.view;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -53,12 +55,16 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+
         setContentView(R.layout.activity_login);
 
         ARouter.getInstance().inject(this);
 
         ButterKnife.bind(this);
-        Log.e(TAG, identity);
     }
 
     @Override
@@ -126,8 +132,10 @@ public class LoginActivity extends AppCompatActivity {
                                 .navigation(LoginActivity.this);
                     }
                     if (identity.equals("staff")){
+                        long job_number_long = Long.parseLong(job_number);
                         ARouter.getInstance()
                                 .build(Constants.ACTIVITY_STAFF)
+                                .withLong("job_number", job_number_long)
                                 .withTransition(R.anim.fade_right_in,R.anim.fade_scale_out)
                                 .navigation(LoginActivity.this);
                     }

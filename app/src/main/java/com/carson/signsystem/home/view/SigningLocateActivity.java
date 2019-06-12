@@ -1,8 +1,8 @@
 package com.carson.signsystem.home.view;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,18 +13,14 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.amap.api.interfaces.MapCameraMessage;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.CameraUpdate;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
-import com.amap.api.maps2d.Projection;
-import com.amap.api.maps2d.model.Circle;
 import com.amap.api.maps2d.model.CircleOptions;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.MarkerOptions;
@@ -34,7 +30,6 @@ import com.carson.signsystem.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 
 @Route(path = "/app/SigningLocateActivity")
 public class SigningLocateActivity extends AppCompatActivity implements LocationSource, AMapLocationListener {
@@ -78,6 +73,11 @@ public class SigningLocateActivity extends AppCompatActivity implements Location
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+
         setContentView(R.layout.activity_signing_locate);
 
         ARouter.getInstance().inject(this);

@@ -28,9 +28,9 @@ public class MyCalendarView extends View {
 
     private static final String[] weeks = new String[]{"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 
-    private static final List<Integer> selectedDates = new ArrayList<>();
+    private List<Integer> selectedDates = new ArrayList<>();
 
-    public enum TYPE {BEFORE, AFTER};
+    public enum TYPE {BEFORE, AFTER}
 
     private Paint mBgPaint;
     private Paint mTextPaint;
@@ -126,6 +126,11 @@ public class MyCalendarView extends View {
 
     }
 
+    public void setSelectedDates(List<Integer> list) {
+        this.selectedDates = list;
+        postInvalidate();
+    }
+
     public void setMonthChangeListener(OnChangeMonthListener listener) {
         this.mListener = listener;
     }
@@ -188,10 +193,10 @@ public class MyCalendarView extends View {
         Log.i(TAG, "rowCount = " + rowCount);
         Log.i(TAG, "remains = " + remains);
 
-        selectedDates.add(4);
-        selectedDates.add(9);
-        selectedDates.add(16);
-        selectedDates.add(25);
+//        selectedDates.add(4);
+//        selectedDates.add(9);
+//        selectedDates.add(16);
+//        selectedDates.add(25);
 
         // 上一个月
         c.add(Calendar.MONTH, -1);
@@ -326,29 +331,31 @@ public class MyCalendarView extends View {
                 }
             }
 
-            if (selectedDates.contains(date)) {
-                mPaint.setColor(getResources().getColor(R.color.colorAccent));
-                float cx = column * perWidth + (float) perWidth / 2;
-                float cy = originTop + rowHeight * (rowCount + 1) - 12;
-                mPaint.setStyle(Paint.Style.FILL);
-                mPaint.setShadowLayer(10, 0, 5, mSelectedColor);
-                canvas.drawCircle(cx, cy, 40, mPaint);
-                mTextPaint.setColor(mSelectedColorText);
-                mPaint.setShadowLayer(0, 0, 0, Color.GRAY);
-            } else {
-                // 不包含
-                if (date < currentDate || !isCurMonth) {
-                    mPaint.setColor(Color.argb(100, 228, 0, 0));
+            if (selectedDates != null) {
+                if (selectedDates.contains(date)) {
+                    mPaint.setColor(getResources().getColor(R.color.colorAccent));
                     float cx = column * perWidth + (float) perWidth / 2;
                     float cy = originTop + rowHeight * (rowCount + 1) - 12;
                     mPaint.setStyle(Paint.Style.FILL);
-                    mBorderPaint.setStyle(Paint.Style.STROKE);
-                    mBorderPaint.setColor(Color.GRAY);
-                    mPaint.setShadowLayer(10, 0, 5, Color.GRAY);
+                    mPaint.setShadowLayer(10, 0, 5, mSelectedColor);
                     canvas.drawCircle(cx, cy, 40, mPaint);
-                    canvas.drawCircle(cx, cy, 40, mBorderPaint);
                     mTextPaint.setColor(mSelectedColorText);
                     mPaint.setShadowLayer(0, 0, 0, Color.GRAY);
+                } else {
+                    // 不包含
+                    if (date < currentDate || !isCurMonth) {
+                        mPaint.setColor(Color.argb(100, 228, 0, 0));
+                        float cx = column * perWidth + (float) perWidth / 2;
+                        float cy = originTop + rowHeight * (rowCount + 1) - 12;
+                        mPaint.setStyle(Paint.Style.FILL);
+                        mBorderPaint.setStyle(Paint.Style.STROKE);
+                        mBorderPaint.setColor(Color.GRAY);
+                        mPaint.setShadowLayer(10, 0, 5, Color.GRAY);
+                        canvas.drawCircle(cx, cy, 40, mPaint);
+                        canvas.drawCircle(cx, cy, 40, mBorderPaint);
+                        mTextPaint.setColor(mSelectedColorText);
+                        mPaint.setShadowLayer(0, 0, 0, Color.GRAY);
+                    }
                 }
             }
 
